@@ -1,0 +1,11 @@
+.Toolbar {
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-self: center;
+  background: white;
+  height: 100px;
+  border-bottom: 1px solid #ddd;
+  box-sizing: border-box;
+  box-shadow: 0px 0px 10px #ddd;
+}
