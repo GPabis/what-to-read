@@ -1,0 +1,46 @@
+.WelcomePage {
+  text-align: center;
+  width: 1000px;
+  height: 800px;
+  margin: 100px auto;
+  font-size: 25px;
+  padding: 0;
+}
+
+.WelcomePage ol {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.WelcomePage ol li {
+  padding: 20px 0;
+  margin: 0;
+  width: 600px;
+  text-align: justify;
+}
+
+@media (max-width: 600px) {
+  .WelcomePage {
+    text-align: center;
+    font-size: 15px;
+    margin: 50px auto;
+    width: 80vw;
+  }
+
+  .WelcomePage ol {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .WelcomePage ol li {
+    padding: 10px 0;
+    width: 100%;
+    text-align: justify;
+  }
+}

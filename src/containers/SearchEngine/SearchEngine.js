@@ -3,7 +3,8 @@ import classes from "./SearchEngine.module.css";
 import DateSelector from "./DateSelector/DateSelector";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "../../axios-orders";
-import BestsellerTypes from "../../components/BestsellerTypes/BestsellerTypes";
+import BestsellerTypes from "../../components/Navigation/Toolbar/BestsellerTypes/BestsellerTypes";
+import Button from "../../components/UI/Button/Button";
 
 const apiKey = "?api-key=ilptxndRe94rjpJtp6jt9YZzhEhaLIBK";
 
@@ -51,7 +52,7 @@ export default class SearchEngine extends Component {
       <form className={classes.SearchEngine}>
         <DateSelector />
         <select className={classes.Select}>{bestsellerOptions}</select>
-        <button className={classes.Button}>SEARCH</button>
+        <Button>SEARCH</Button>
       </form>
     );
   }
