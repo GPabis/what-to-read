@@ -1,17 +1,23 @@
 import React, { Component } from "react";
 import classes from "./SearchEngine.module.css";
-import DateSelector from "./DateSelector/DateSelector";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "../../axios-orders";
 import BestsellerTypes from "../../components/Navigation/Toolbar/BestsellerTypes/BestsellerTypes";
 import Button from "../../components/UI/Button/Button";
+import { withRouter } from "react-router-dom";
+import DatePicker from "react-datepicker";
 
 const apiKey = "?api-key=ilptxndRe94rjpJtp6jt9YZzhEhaLIBK";
 
-export default class SearchEngine extends Component {
+class SearchEngine extends Component {
   state = {
     bestsellerTypes: [],
     error: false,
+    inputValues: {
+      dateValue: "2020-01-01",
+      categoryValue: "hardcover-nonfiction",
+    },
+    selectedDate: Date.now(),
   };
 
   componentDidMount() {
@@ -36,7 +42,7 @@ export default class SearchEngine extends Component {
       });
   }
 
-  render() {
+  _setBestsellerOptions = () => {
     let bestsellerOptions = this.state.error ? (
       <option>This don't working</option>
     ) : (
@@ -47,13 +53,63 @@ export default class SearchEngine extends Component {
         <BestsellerTypes bestsellerTypesArr={this.state.bestsellerTypes} />
       );
     }
+    return bestsellerOptions;
+  };
 
+  submitHandler = (e) => {
+    e.preventDefault();
+    const queryParam = [];
+    for (let i in this.state.inputValues) {
+      queryParam.push(encodeURIComponent(i) + "=" + this.state.inputValues[i]);
+    }
+    const queryString = queryParam.join("&");
+    console.log(this.props.history);
+    this.props.history.push({
+      pathname: "/list/",
+      search: "?" + queryString,
+    });
+  };
+
+  selectDateHandler = (date) => {
+    let updatedInputValues = { ...this.state.inputValues };
+    updatedInputValues.dateValue = date.toISOString().slice(0, 10);
+    this.setState({
+      inputValues: { ...updatedInputValues },
+      selectedDate: date,
+    });
+  };
+
+  selectCategoryHanlder = (e) => {
+    let currentBestsellerCategory = [...this.state.bestsellerTypes];
+    let updatedInputValues = { ...this.state.inputValues };
+    let encodedCathegory = currentBestsellerCategory.find((elem) => {
+      return elem.bestsellerTypesName === e.target.value;
+    });
+    updatedInputValues.categoryValue =
+      encodedCathegory.bestsellerTypesEncodedName;
+    this.setState({
+      inputValues: { ...updatedInputValues },
+    });
+  };
+
+  render() {
     return (
-      <form className={classes.SearchEngine}>
-        <DateSelector />
-        <select className={classes.Select}>{bestsellerOptions}</select>
+      <form onSubmit={this.submitHandler} className={classes.SearchEngine}>
+        <DatePicker
+          selected={this.state.selectedDate}
+          dateFormat="yyyy-MM-dd"
+          onChange={(date) => this.selectDateHandler(date)}
+        />
+        <select
+          onChange={(e) => this.selectCategoryHanlder(e)}
+          className={classes.Select}
+        >
+          {this._setBestsellerOptions()}
+        </select>
         <Button>SEARCH</Button>
       </form>
     );
   }
 }
+
+export default withRouter(SearchEngine);

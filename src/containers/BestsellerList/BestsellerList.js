@@ -2,8 +2,6 @@ import React, { Component } from "react";
 import axios from "../../axios-orders";
 import BestsellerItems from "../../components/BestsellerItems/BestsellerItems";
 
-const date = "2018-01-21";
-const list = "combined-print-and-e-book-fiction";
 const apiKey = "?api-key=ilptxndRe94rjpJtp6jt9YZzhEhaLIBK";
 
 export default class BestsellerList extends Component {
@@ -14,9 +12,30 @@ export default class BestsellerList extends Component {
     },
     books: [],
     error: false,
+    queryValues: {
+      dateValue: "2020-01-01",
+      categoryValue: "hardcover-nonfiction",
+    },
+    queryChenges: false,
   };
 
-  componentDidMount() {
+  componentDidUpdate() {
+    const query = new URLSearchParams(this.props.location.search);
+    const queryValues = {};
+    for (let param of query.entries()) {
+      queryValues[param[0]] = param[1];
+    }
+    if (
+      this.state.queryValues.dateValue !== queryValues.dateValue ||
+      this.state.queryValues.categoryValue !== queryValues.categoryValue
+    ) {
+      this.setState({ queryValues: queryValues });
+      console.log(this.state.queryValues);
+      this._getBooksFromNYTApi();
+    }
+  }
+
+  _getBooksFromNYTApi = () => {
     let books = {
       rank: null,
       title: null,
@@ -28,16 +47,21 @@ export default class BestsellerList extends Component {
     let bookArr = [];
 
     axios
-      .get("/" + date + "/" + list + ".json" + apiKey)
+      .get(
+        "/" +
+          this.state.queryValues.dateValue +
+          "/" +
+          this.state.queryValues.categoryValue +
+          ".json" +
+          apiKey
+      )
       .then((response) => {
-        console.log(response);
         this.setState({
           bestsellerList: {
             publication_date: response.data.results.bestsellers_date,
             category: response.data.results.display_name,
           },
         });
-        console.log(this.state.bestsellerList);
         response.data.results.books.map((book) => {
           books.rank = book.rank;
           books.title = book.title;
@@ -51,6 +75,17 @@ export default class BestsellerList extends Component {
         console.log(this.state.books[0]);
       })
       .catch((error) => this.setState({ error: true }));
+  };
+
+  componentDidMount() {
+    const query = new URLSearchParams(this.props.location.search);
+    const queryValues = {};
+    for (let param of query.entries()) {
+      queryValues[param[0]] = param[1];
+    }
+    console.log(queryValues);
+    this.setState({ queryValues: queryValues });
+    this._getBooksFromNYTApi();
   }
 
   render() {
@@ -64,7 +99,7 @@ export default class BestsellerList extends Component {
       booksList = (
         <BestsellerItems
           category={this.state.bestsellerList.category}
-          publicationDate={this.state.bestsellerList.publication_date}
+          publicationDate={this.state.queryValues.date}
           bestsellerItemsArr={this.state.books}
         />
       );
