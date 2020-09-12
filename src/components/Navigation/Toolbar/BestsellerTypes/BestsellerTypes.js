@@ -3,14 +3,12 @@ import BestsellerType from "./BestsellerType/BestsellerType";
 
 const bestsellerTypes = (props) => (
   <>
-    {props.bestsellerTypesArr.map((type) => {
-      return (
-        <BestsellerType
-          key={type.bestsellerTypesEncodedName}
-          bestsellerTypeName={type.bestsellerTypesName}
-        />
-      );
-    })}
+    {props.bestsellerTypesArr.map((type) => (
+      <BestsellerType
+        key={type.bestsellerTypesEncodedName}
+        bestsellerTypeName={type.bestsellerTypesName}
+      />
+    ))}
   </>
 );
 

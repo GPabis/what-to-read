@@ -21,39 +21,32 @@ class SearchEngine extends Component {
   };
 
   componentDidMount() {
-    const typesObject = {
-      bestsellerTypesName: null,
-      bestsellerTypesEncodedName: null,
-    };
     const typeObjectArr = [];
     axios
       .get("/names.json" + apiKey)
       .then((response) => {
-        response.data.results.map((result) => {
-          typesObject.bestsellerTypesName = result.list_name;
-          typesObject.bestsellerTypesEncodedName = result.list_name_encoded;
-          typeObjectArr.push({ ...typesObject });
-          return typesObject;
+        response.data.results.forEach(({ list_name, list_name_encoded }) => {
+          typeObjectArr.push({
+            bestsellerTypesName: list_name,
+            bestsellerTypesEncodedName: list_name_encoded,
+          });
         });
         this.setState({ bestsellerTypes: typeObjectArr });
       })
-      .catch((error) => {
+      .catch(() => {
         this.setState({ error: true });
       });
   }
 
   _setBestsellerOptions = () => {
-    let bestsellerOptions = this.state.error ? (
-      <option>This don't working</option>
-    ) : (
+    const { error, bestsellerTypes } = this.state;
+    return error ? (
+      <option>This isn't working</option>
+    ) : !bestsellerTypes.length ? (
       <option>Loading...</option>
+    ) : (
+      <BestsellerTypes bestsellerTypesArr={bestsellerTypes} />
     );
-    if (this.state.bestsellerTypes.length > 0) {
-      bestsellerOptions = (
-        <BestsellerTypes bestsellerTypesArr={this.state.bestsellerTypes} />
-      );
-    }
-    return bestsellerOptions;
   };
 
   submitHandler = (e) => {
@@ -98,10 +91,10 @@ class SearchEngine extends Component {
         <DatePicker
           selected={this.state.selectedDate}
           dateFormat="yyyy-MM-dd"
-          onChange={(date) => this.selectDateHandler(date)}
+          onChange={this.selectDateHandler}
         />
         <select
-          onChange={(e) => this.selectCategoryHanlder(e)}
+          onChange={this.selectCategoryHanlder}
           className={classes.Select}
         >
           {this._setBestsellerOptions()}

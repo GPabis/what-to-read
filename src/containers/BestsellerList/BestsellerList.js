@@ -25,56 +25,57 @@ export default class BestsellerList extends Component {
     for (let param of query.entries()) {
       queryValues[param[0]] = param[1];
     }
+    const { dateValue, categoryValue } = this.state.queryValues;
+
     if (
-      this.state.queryValues.dateValue !== queryValues.dateValue ||
-      this.state.queryValues.categoryValue !== queryValues.categoryValue
+      categoryValue !== queryValues.categoryValue ||
+      dateValue !== queryValues.dateValue
     ) {
-      this.setState({ queryValues: queryValues });
-      console.log(this.state.queryValues);
-      this._getBooksFromNYTApi();
+      this.setState({ queryValues }, this._getBooksFromNYTApi);
     }
   }
 
   _getBooksFromNYTApi = () => {
-    let books = {
-      rank: null,
-      title: null,
-      author: null,
-      description: null,
-      book_image: null,
-      amazon_product_url: null,
-    };
-    let bookArr = [];
+    this.setState({ error: false });
+    const { dateValue, categoryValue } = this.state.queryValues;
 
     axios
-      .get(
-        "/" +
-          this.state.queryValues.dateValue +
-          "/" +
-          this.state.queryValues.categoryValue +
-          ".json" +
-          apiKey
-      )
+      .get(`/${dateValue}/${categoryValue}.json${apiKey}`)
       .then((response) => {
+        const {
+          books: bookList,
+          bestsellers_date,
+          display_name,
+        } = response.data.results;
+
+        const books = bookList.map((book) => {
+          const {
+            rank,
+            title,
+            author,
+            description,
+            book_image,
+            amazon_product_url,
+          } = book;
+          return {
+            rank,
+            title,
+            author,
+            description,
+            book_image,
+            amazon_product_url,
+          };
+        });
+
         this.setState({
           bestsellerList: {
-            publication_date: response.data.results.bestsellers_date,
-            category: response.data.results.display_name,
+            publication_date: bestsellers_date,
+            category: display_name,
           },
+          books,
         });
-        response.data.results.books.map((book) => {
-          books.rank = book.rank;
-          books.title = book.title;
-          books.author = book.author;
-          books.description = book.description;
-          books.book_image = book.book_image;
-          books.amazon_product_url = book.amazon_product_url;
-          bookArr.push({ ...books });
-        });
-        this.setState({ books: bookArr });
-        console.log(this.state.books[0]);
       })
-      .catch((error) => this.setState({ error: true }));
+      .catch(() => this.setState({ error: true }));
   };
 
   componentDidMount() {
@@ -83,28 +84,24 @@ export default class BestsellerList extends Component {
     for (let param of query.entries()) {
       queryValues[param[0]] = param[1];
     }
-    console.log(queryValues);
     this.setState({ queryValues: queryValues });
     this._getBooksFromNYTApi();
   }
 
   render() {
-    let booksList = this.state.error ? (
-      <p>We hava a problem!</p>
-    ) : (
-      <p>Loading...</p>
+    const { error, books } = this.state;
+    return (
+      <>
+        {error && <p>We have a problem!</p>}
+        {!error && !books.length && <p>Loading...</p>}
+        {!error && !!books.length && (
+          <BestsellerItems
+            category={this.state.bestsellerList.category}
+            publicationDate={this.state.bestsellerList.publication_date}
+            bestsellerItemsArr={this.state.books}
+          />
+        )}
+      </>
     );
-
-    if (this.state.books.length > 0) {
-      booksList = (
-        <BestsellerItems
-          category={this.state.bestsellerList.category}
-          publicationDate={this.state.queryValues.date}
-          bestsellerItemsArr={this.state.books}
-        />
-      );
-    }
-
-    return booksList;
   }
 }

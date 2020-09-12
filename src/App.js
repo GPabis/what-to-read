@@ -7,16 +7,14 @@ import BestsellerList from "./containers/BestsellerList/BestsellerList";
 
 function App() {
   return (
-    <div>
-      <BrowserRouter>
-        <Layout>
-          <Switch>
-            <Route path="/list" component={BestsellerList} />
-            <Route path="/" component={WelcomePage} />
-          </Switch>
-        </Layout>
-      </BrowserRouter>
-    </div>
+    <BrowserRouter>
+      <Layout>
+        <Switch>
+          <Route path="/list" component={BestsellerList} />
+          <Route path="/" component={WelcomePage} />
+        </Switch>
+      </Layout>
+    </BrowserRouter>
   );
 }
 
