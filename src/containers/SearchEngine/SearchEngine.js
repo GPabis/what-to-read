@@ -16,6 +16,7 @@ class SearchEngine extends Component {
     inputValues: {
       dateValue: "2020-01-01",
       categoryValue: "hardcover-nonfiction",
+      lastBestsellerDate: "2020-01-01",
     },
     selectedDate: Date.now(),
   };
@@ -25,12 +26,15 @@ class SearchEngine extends Component {
     axios
       .get("/names.json" + apiKey)
       .then((response) => {
-        response.data.results.forEach(({ list_name, list_name_encoded }) => {
-          typeObjectArr.push({
-            bestsellerTypesName: list_name,
-            bestsellerTypesEncodedName: list_name_encoded,
-          });
-        });
+        response.data.results.forEach(
+          ({ list_name, list_name_encoded, newest_published_date }) => {
+            typeObjectArr.push({
+              bestsellerTypesName: list_name,
+              bestsellerTypesEncodedName: list_name_encoded,
+              bestsellerLastDate: newest_published_date,
+            });
+          }
+        );
         this.setState({ bestsellerTypes: typeObjectArr });
       })
       .catch(() => {
@@ -73,16 +77,23 @@ class SearchEngine extends Component {
   };
 
   selectCategoryHanlder = (e) => {
-    let currentBestsellerCategory = [...this.state.bestsellerTypes];
-    let updatedInputValues = { ...this.state.inputValues };
+    const currentBestsellerCategory = [...this.state.bestsellerTypes];
+    const updatedInputValues = { ...this.state.inputValues };
     let encodedCathegory = currentBestsellerCategory.find((elem) => {
       return elem.bestsellerTypesName === e.target.value;
     });
+    console.log(encodedCathegory);
     updatedInputValues.categoryValue =
       encodedCathegory.bestsellerTypesEncodedName;
-    this.setState({
-      inputValues: { ...updatedInputValues },
-    });
+    updatedInputValues.lastBestsellerDate = encodedCathegory.bestsellerLastDate;
+    console.log("1", updatedInputValues);
+    this.setState(
+      {
+        inputValues: { ...updatedInputValues },
+      },
+      console.log("2", this.state.inputValues)
+    );
+    console.log("3", this.state.inputValues);
   };
 
   render() {
