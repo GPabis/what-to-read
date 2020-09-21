@@ -15,24 +15,56 @@ export default class BestsellerList extends Component {
     queryValues: {
       dateValue: "2020-01-01",
       categoryValue: "hardcover-nonfiction",
+      lastBestsellerDate: "2017-01-29",
     },
     queryChenges: false,
+    searchByLastDate: false,
   };
 
   componentDidUpdate() {
+    console.log("Update!");
+    let queryValues = this._getValuesFromURL();
+    const { dateValue, categoryValue } = this.state.queryValues;
+    if (
+      categoryValue !== queryValues.categoryValue ||
+      (dateValue !== queryValues.dateValue &&
+        dateValue !== queryValues.lastBestsellerDate) ||
+      (dateValue === queryValues.lastBestsellerDate &&
+        this._isEarlierThanLastBestsellerDate(
+          queryValues.lastBestsellerDate,
+          queryValues.dateValue
+        ))
+    ) {
+      console.log("Update [2]");
+      this.setState(
+        { queryValues, searchByLastDate: false },
+        this._getBooksFromNYTApi
+      );
+    }
+  }
+
+  _isEarlierThanLastBestsellerDate(lastBestsellerDate, choosenDate) {
+    const d1 = new Date(lastBestsellerDate);
+    const d2 = new Date(choosenDate);
+    return d1 > d2;
+  }
+
+  _getValuesFromURL() {
     const query = new URLSearchParams(this.props.location.search);
-    const queryValues = {};
+    let queryValues = {};
     for (let param of query.entries()) {
       queryValues[param[0]] = param[1];
     }
-    const { dateValue, categoryValue } = this.state.queryValues;
-
-    if (
-      categoryValue !== queryValues.categoryValue ||
-      dateValue !== queryValues.dateValue
-    ) {
-      this.setState({ queryValues }, this._getBooksFromNYTApi);
+    if (this.state.searchByLastDate) {
+      queryValues = this._searchByLastBestsellerDate(queryValues);
     }
+    return queryValues;
+  }
+
+  _searchByLastBestsellerDate(queryValues) {
+    const updatedQuery = { ...queryValues };
+    updatedQuery.dateValue = queryValues.lastBestsellerDate;
+    return updatedQuery;
   }
 
   _getBooksFromNYTApi = () => {
@@ -75,7 +107,14 @@ export default class BestsellerList extends Component {
           books,
         });
       })
-      .catch(() => this.setState({ error: true }));
+      .catch((error) => {
+        if (
+          error.response.data.errors[0] ===
+          "No list found for list name and/or date provided."
+        ) {
+          this.setState({ searchByLastDate: true });
+        } else this.setState({ error: true });
+      });
   };
 
   componentDidMount() {
@@ -92,7 +131,7 @@ export default class BestsellerList extends Component {
     const { error, books } = this.state;
     return (
       <>
-        {error && <p>We have a problem!</p>}
+        {error && <p>We have a problem! Try again later. </p>}
         {!error && !books.length && <p>Loading...</p>}
         {!error && !!books.length && (
           <BestsellerItems
