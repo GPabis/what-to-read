@@ -1,6 +1,6 @@
 import React from "react";
 import classes from "./BestsellerItem.module.css";
-import Button from "../../UI/Button/Button";
+import classesBtn from "../../UI/Button/Button.module.css";
 
 const bestsellerItem = (props) => (
   <div className={classes.BestsellerItem}>
@@ -16,8 +16,14 @@ const bestsellerItem = (props) => (
       </div>
     </div>
     <div className={classes.Buttons}>
-      <Button>BUY</Button>
-      <Button>REVIEWS</Button>
+      <a
+        className={classesBtn.Button}
+        href={props.amazonLink}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        BUY
+      </a>
     </div>
   </div>
 );

@@ -16,6 +16,7 @@ const bestsellerItems = (props) => (
           rank={item.rank}
           key={item.rank}
           image={item.book_image}
+          amazonLink={item.amazon_product_url}
         />
       );
     })}

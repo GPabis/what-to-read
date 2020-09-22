@@ -6,6 +6,7 @@ import BestsellerTypes from "../../components/Navigation/Toolbar/BestsellerTypes
 import Button from "../../components/UI/Button/Button";
 import { withRouter } from "react-router-dom";
 import DatePicker from "react-datepicker";
+import "./DatePicker.css";
 
 const apiKey = "?api-key=ilptxndRe94rjpJtp6jt9YZzhEhaLIBK";
 
