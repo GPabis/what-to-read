@@ -44,6 +44,7 @@ export default class BestsellerList extends Component {
 
     _getValuesFromURL() {
         const query = new URLSearchParams(this.props.location.search);
+        console.log('ss');
         let queryValues = {};
         for (let param of query.entries()) {
             queryValues[param[0]] = param[1];
