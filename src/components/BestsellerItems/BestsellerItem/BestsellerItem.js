@@ -1,6 +1,12 @@
+<<<<<<< HEAD
 import React from 'react';
 import classes from './BestsellerItem.module.css';
 import Button from '../../UI/Button/Button';
+=======
+import React from "react";
+import classes from "./BestsellerItem.module.css";
+import classesBtn from "../../UI/Button/Button.module.css";
+>>>>>>> origin/dev
 
 const bestsellerItem = (props) => (
     <div className={classes.BestsellerItem}>
@@ -20,6 +26,20 @@ const bestsellerItem = (props) => (
             <Button>REVIEWS</Button>
         </div>
     </div>
+<<<<<<< HEAD
+=======
+    <div className={classes.Buttons}>
+      <a
+        className={classesBtn.Button}
+        href={props.amazonLink}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        BUY
+      </a>
+    </div>
+  </div>
+>>>>>>> origin/dev
 );
 
 export default bestsellerItem;

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { Component } from 'react';
 import classes from './SearchEngine.module.css';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -6,6 +7,17 @@ import BestsellerTypes from '../../components/Navigation/Toolbar/BestsellerTypes
 import Button from '../../components/UI/Button/Button';
 import { withRouter } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
+=======
+import React, { Component } from "react";
+import classes from "./SearchEngine.module.css";
+import "react-datepicker/dist/react-datepicker.css";
+import axios from "../../axios-orders";
+import BestsellerTypes from "../../components/Navigation/Toolbar/BestsellerTypes/BestsellerTypes";
+import Button from "../../components/UI/Button/Button";
+import { withRouter } from "react-router-dom";
+import DatePicker from "react-datepicker";
+import "./DatePicker.css";
+>>>>>>> origin/dev
 
 const apiKey = '?api-key=ilptxndRe94rjpJtp6jt9YZzhEhaLIBK';
 
