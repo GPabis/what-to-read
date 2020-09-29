@@ -59,7 +59,6 @@ class SearchEngine extends Component {
             queryParam.push(encodeURIComponent(i) + '=' + this.state.inputValues[i]);
         }
         const queryString = queryParam.join('&');
-        console.log(this.props.history);
         this.props.history.push({
             pathname: '/list/',
             search: '?' + queryString,
@@ -84,14 +83,9 @@ class SearchEngine extends Component {
         console.log(encodedCathegory);
         updatedInputValues.categoryValue = encodedCathegory.bestsellerTypesEncodedName;
         updatedInputValues.lastBestsellerDate = encodedCathegory.bestsellerLastDate;
-        console.log('1', updatedInputValues);
-        this.setState(
-            {
-                inputValues: { ...updatedInputValues },
-            },
-            console.log('2', this.state.inputValues),
-        );
-        console.log('3', this.state.inputValues);
+        this.setState({
+            inputValues: { ...updatedInputValues },
+        });
     };
 
     render() {
