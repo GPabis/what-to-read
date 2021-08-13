@@ -1,0 +1,59 @@
+.BestsellerItem {
+    width: 1200px;
+    height: 400px;
+    margin: 20px auto;
+    background: white;
+    border: solid 1px #eee;
+    padding: 20px;
+    box-sizing: border-box;
+    box-shadow: 0px 0px 10px #ddd;
+    display: flex;
+    justify-content: space-between;
+}
+
+@media screen and (max-width: 728px) {
+    .BestsellerItem {
+        flex-direction: column;
+        height: auto;
+        width: 90%;
+        align-items: center;
+        align-content: center;
+    }
+}
+.BestsellerItem img {
+    max-width: 250px;
+    height: 100%;
+    flex-grow: 0.5;
+}
+
+.Description {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 2;
+    justify-content: space-between;
+    padding: 0 0 0 15px;
+}
+
+.Description h2 {
+    flex-grow: 1;
+}
+
+.Description h3 {
+    flex-grow: 20;
+}
+.Description div {
+    flex-grow: 15;
+}
+
+.Buttons {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 0.5;
+    justify-content: space-between;
+    align-self: center;
+}
+
+.Buttons a {
+    width: 50px;
+    text-align: center;
+}
